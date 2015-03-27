@@ -1,12 +1,5 @@
 package osewh
 
-@Grapes([
-    @Grab(group='org.eclipse.jetty', module='jetty-server', version='9.3.0.M2'),
-    @Grab(group='org.eclipse.jetty', module='jetty-servlet', version='9.3.0.M2'),
-    @Grab(group='org.eclipse.jetty', module='jetty-servlets', version='9.3.0.M2')
-    ]
-)
-
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.*;
 

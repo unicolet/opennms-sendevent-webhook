@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.regex.Pattern
 
 class OSEWebHookServlet extends GroovyServlet {
     Logger logger = LoggerFactory.getLogger(this.class);
@@ -30,7 +31,7 @@ class OSEWebHookServlet extends GroovyServlet {
         if(isAuthorized(token)) {
             String id=request.getParameter("id");
             String host=request.getParameter("host");
-            String ipInterface=request.getParameter("ip")?: request.getRemoteHost();
+            String ipInterface=request.getParameter("ip")?: request.getRemoteAddr();
             String source=request.getParameter("source")?:"OSEWebHookServlet";
                 def event=new OnmsEvent(uei, ( id? id as int:0), ipInterface, source)
             event.setHost(host)
@@ -41,7 +42,7 @@ class OSEWebHookServlet extends GroovyServlet {
                     event.addParm(name, request.getParameter(name))
                 }
             }
-            event.addParm("sender-ip",request.getRemoteHost())
+            event.addParm("sender-ip",request.getRemoteAddr())
     
             def opennmsHost=( System.getProperty("opennms.host")?:"127.0.0.1" );
     
@@ -61,14 +62,17 @@ class OSEWebHookServlet extends GroovyServlet {
             response.setHeader("Content-type","application/json")
             response.getOutputStream().print("{ok:${result.ok}, message: '${result.message}'}\n");
         } else {
+            logger.warn("unauthorized request from ip="+request.getRemoteAddr()+" request="+request.getRequestURL());
             response.setStatus(403) //unauthorized
+            response.getOutputStream().print("Unauthorized");
         }
     }
     
     private boolean isAuthorized(String token) {
         def authorizedTokens=new File("auth_tokens")
         if(authorizedTokens.exists()) {
-            return token && authorizedTokens.text.indexOf(token)!=-1
+            token=token.replaceAll("([\\.\\*\\]\\[\\(\\)])") { "" }; // escape regex
+            return token && Pattern.compile("(?m)^${token}\$").matcher(authorizedTokens.text).find()
         }
         return true
     }

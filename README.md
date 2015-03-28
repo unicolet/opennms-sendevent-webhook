@@ -22,7 +22,11 @@ on Windows run:
 
     gradlew.bat clean shadowJar
 
-To run as a service (*nix only) as root type:
+Run it as a standalone program on a console (all platforms):
+
+    java -jar -DPORT=9090 -Dopennms.host=127.0.0.1 build/libs/opennms-sendevent-webhook-0.1-all.jar
+
+To run it as a service (*nix only) as root type:
 
     mkdir -p /opt/opennms-sendevent-webhook
     cp build/libs/opennms-sendevent-webhook-0.1-all.jar /opt/opennms-sendevent-webhook/
@@ -30,4 +34,14 @@ To run as a service (*nix only) as root type:
     chkconfig add opennms-sendevent-webhook
     /etc/init.d/opennms-sendevent-webhook start
 
+Configuration
+-------------
 
+Create a /etc/default/opennms-sendevent-webhook (Ubuntu,Debian) or /etc/sysconfig/opennms-sendevent-webhook (RH, Centos)
+and change the following variables (their meaning should be self explanatory):
+
+    PORT=9090
+    OPENNMS_HOST=127.0.0.1
+    user="root"
+    group="root"
+    chdir="/opt/opennms-sendevent-webhook"

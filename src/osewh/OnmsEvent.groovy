@@ -2,7 +2,8 @@ package osewh
 
 import java.text.DateFormat
 /**
- *
+ * Modified from: http://www.opennms.org/wiki/Send_event_using_java
+ * 
  * @author apaxson
  */
 public class OnmsEvent {

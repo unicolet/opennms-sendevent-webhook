@@ -8,7 +8,7 @@ send-event.pl reinvented as a web hook.
 
 becomes:
 
-    curl http://127.0.0.1/uei.opennms.org/internal/discovery/newSuspect?ip=172.16.1.1
+    curl http://127.0.0.1:9090/uei.opennms.org/internal/discovery/newSuspect?ip=172.16.1.1
 
 
 Installation

@@ -24,13 +24,16 @@ To run it as a standalone program on a console (all platforms):
 
     java -jar -DPORT=9090 -Dopennms.host=127.0.0.1 build/libs/opennms-sendevent-webhook-0.1-all.jar
 
-To run it as a service (*nix only) as root type:
+The software bundles a SysV init script in init.d.
+To run it as a service type the following commands as root:
 
     mkdir -p /opt/opennms-sendevent-webhook
     cp build/libs/opennms-sendevent-webhook-0.1-all.jar /opt/opennms-sendevent-webhook/
     cp init.d/opennms-sendevent-webhook /etc/init.d && chmod 750 /etc/init.d/opennms-sendevent-webhook
     chkconfig add opennms-sendevent-webhook
     /etc/init.d/opennms-sendevent-webhook start
+
+To run the software under other init (systemd, upstart consider using a generator like [pleaserun](https://github.com/jordansissel/pleaserun)).
 
 Configuration
 -------------

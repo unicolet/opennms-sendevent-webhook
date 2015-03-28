@@ -2,9 +2,7 @@
 
 send-event.pl reinvented as a web hook.
 
-    send-event.pl \
-                --interface 172.16.1.1 \
-                uei.opennms.org/internal/discovery/newSuspect
+    send-event.pl --interface 172.16.1.1 uei.opennms.org/internal/discovery/newSuspect
 
 becomes:
 

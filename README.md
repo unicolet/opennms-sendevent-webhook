@@ -1,6 +1,6 @@
 # opennms-sendevent-webhook
 
-send-event.pl reinvented as a web hook.
+[send-event.pl](http://www.opennms.org/wiki/Send-event.pl) reinvented as a web hook.
 
     send-event.pl --interface 172.16.1.1 uei.opennms.org/internal/discovery/newSuspect
 
@@ -67,3 +67,13 @@ Then the previous invocation of the hook changes as follows:
 
     curl http://127.0.0.1:9090/fghsAYYE7h287/uei.opennms.org/internal/discovery/newSuspect?ip=172.16.1.1
 
+Credits
+-------
+
+This softare uses a Java send-event class that implements the protocol, copied and slightly modified
+from the OpenNMS wiki (http://www.opennms.org/wiki/Send_event_using_java).
+
+License
+-------
+
+Licensed under the GPL v3.

@@ -43,3 +43,8 @@ and change the following variables (their meaning should be self explanatory):
     user="root"
     group="root"
     chdir="/opt/opennms-sendevent-webhook"
+
+Todo
+----
+
+Token-based authorization system to prevent abuse

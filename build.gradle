@@ -1,6 +1,8 @@
 apply plugin: 'groovy'
 apply plugin: "com.github.johnrengelman.shadow"
 
+version = '0.1'
+
 sourceSets {
     main {
         groovy {
@@ -35,7 +37,6 @@ task wrapper(type: Wrapper) {
     gradleVersion = '2.3'
 }
 
-version = '0.1'
 jar {
     manifest {
         attributes 'Main-Class': 'osewh.SendEventWebHook'

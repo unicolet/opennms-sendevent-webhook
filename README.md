@@ -67,6 +67,14 @@ Then the previous invocation of the hook changes as follows:
 
     curl http://127.0.0.1:9090/fghsAYYE7h287/uei.opennms.org/internal/discovery/newSuspect?ip=172.16.1.1
 
+Example of adding a token:
+
+    echo fghsAYYE7h287 >> auth_tokens
+    
+Removing a token:
+
+    sed -i -e '/^fghsAYYE7h287$/d' a
+
 Credits
 -------
 

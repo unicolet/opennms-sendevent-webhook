@@ -18,8 +18,14 @@
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
 export PATH
 
+# override these defaults in /etc/default/$name or /etc/sysconfig/$name
 PORT=9090
 OPENNMS_HOST=127.0.0.1
+user="root"
+group="root"
+chroot="/"
+chdir="/opt/opennms-sendevent-webhook"
+nice=""
 
 [ -r /etc/default/$name ] && . /etc/default/$name
 [ -r /etc/sysconfig/$name ] && . /etc/sysconfig/$name

@@ -73,7 +73,7 @@ Example of adding a token:
     
 Removing a token:
 
-    sed -i -e '/^fghsAYYE7h287$/d' a
+    sed -i -e '/^fghsAYYE7h287$/d' auth_tokens
 
 Credits
 -------

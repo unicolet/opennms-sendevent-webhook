@@ -20,7 +20,7 @@ on Windows run:
 
     gradlew.bat clean shadowJar
 
-Run it as a standalone program on a console (all platforms):
+To run it as a standalone program on a console (all platforms):
 
     java -jar -DPORT=9090 -Dopennms.host=127.0.0.1 build/libs/opennms-sendevent-webhook-0.1-all.jar
 
@@ -49,7 +49,7 @@ Authorization
 
 The web hook implements a token-based authorization scheme to prevent unauthorized access.
 
-**By default usage of the web hook is unrestricted.**
+**Access to the web hook is, by default, unrestricted.**
 
 To enforce authentication create a *auth_tokens* file in the web hook process working
 directory.

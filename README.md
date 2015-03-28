@@ -44,7 +44,26 @@ and change the following variables (their meaning should be self explanatory):
     group="root"
     chdir="/opt/opennms-sendevent-webhook"
 
-Todo
-----
+Authorization
+-------------
 
-Token-based authorization system to prevent abuse
+The web hook implements a token-based authorization scheme to prevent unauthorized access.
+
+**By default usage of the web hook is unrestricted.**
+
+To enforce authentication create a *auth_tokens* file in the web hook process working
+directory.
+
+Each line represents a token that can be shared with the callers of the hook to authorize them.
+The file is read with every request, so there is no need to restart or reload the web hook process.
+
+Tokens must only contain mixed case letters and numbers.
+
+Suppose *auth_tokens* contains (on a single line, among others) the following token:
+
+     fghsAYYE7h287
+     
+Then the previous invocation of the hook changes as follows:
+
+    curl http://127.0.0.1:9090/fghsAYYE7h287/uei.opennms.org/internal/discovery/newSuspect?ip=172.16.1.1
+

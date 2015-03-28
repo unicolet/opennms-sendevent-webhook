@@ -24,7 +24,7 @@ class OSEWebHookServlet extends GroovyServlet {
         request.getParameterNames().each { p ->
             def name=p.toString()
             if (name!="id" && name!="host" && name!="source" && name!="ip") {
-                println("adding event param: "+name)
+                logger.debug("adding event param: "+name)
                 event.addParm(name, request.getParameter(name))
             }
         }
@@ -32,12 +32,18 @@ class OSEWebHookServlet extends GroovyServlet {
 
         def opennmsHost=( System.getProperty("opennms.host")?:"127.0.0.1" );
 
-        println "Sending event with uei=${uei} to ${opennmsHost}"
+        logger.info("Sending event with uei=${uei} to ${opennmsHost}")
 
         event.setOpennmsHost( opennmsHost ) ;
         def xml=event.toXml()
-        println xml
+        logger.trace(xml)
         def result=event.sendEvent(xml);
+        
+        if(result.ok) {
+            logger.info("event posted successfully")
+        } else {
+            logger.error("event post failed:"+result.message)
+        }
 
         response.setHeader("Content-type","application/json")
         response.getOutputStream().print("{ok:${result.ok}, message: '${result.message}'}\n");

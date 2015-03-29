@@ -17,16 +17,16 @@ after_success:
   - printf "#!/bin/sh\n/sbin/chkconfig --add opennms-sendevent-webhook\n" > after-install.sh
   - printf "#!/bin/sh\n/sbin/chkconfig --remove opennms-sendevent-webhook\n" > before-remove.sh
   - chmod +x after-install.sh before-remove.sh
-  - fpm -s dir -t rpm -a all -n opennms-sendevent-webhook -v ${VERSION} \
-    --iteration ${ITERATION} \
-    --description "OpenNMS send0even Web Hook" \
-    --after-install after-install.sh \
-    --before-remove before-remove.sh \
-    --config-files etc/sysconfig/opennms-sendevent-webhook \
-    --maintainer umberto.nicoletti@gmail.com \
-    --url https://github.com/unicolet/opennms-sendevent-webhook \
-    --rpm-user root \
-    --rpm-group root \
-    --directories opt/opennms-sendevent-webhook  \
+  - fpm -s dir -t rpm -a all -n opennms-sendevent-webhook -v ${VERSION} 
+    --iteration ${ITERATION} 
+    --description "OpenNMS send-event Web Hook" 
+    --after-install after-install.sh 
+    --before-remove before-remove.sh 
+    --config-files etc/sysconfig/opennms-sendevent-webhook
+    --maintainer umberto.nicoletti@gmail.com 
+    --url https://github.com/unicolet/opennms-sendevent-webhook 
+    --rpm-user root 
+    --rpm-group root 
+    --directories opt/opennms-sendevent-webhook  
     opt etc
 

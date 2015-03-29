@@ -23,7 +23,10 @@ after_success:
   --maintainer umberto.nicoletti@gmail.com --url https://github.com/unicolet/opennms-sendevent-webhook
   --rpm-user root --rpm-group root --directories opt/opennms-sendevent-webhook opt
   etc
-- mkdir rpm && mv *.rpm rpm
+- mkdir rpm
+- mv *.rpm rpm
+- ls -la rpm
+
 deploy:
   provider: packagecloud
   username: unicoletti

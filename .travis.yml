@@ -34,4 +34,8 @@ deploy:
     secure: Fzi+fEjpR7xhBcyEyHKwOzbO1KfqTFEz8nRoLezsBxSm6R5ks5LkdiqsonTjIr8iwLFXO4pvORphuqyoZl0qQWtj8WFIrM0Z5tqHrpSoquEcbtDxVkWRIJDVc/a5Xrxo15b36uMmo0nuujzZcYEP5Q3LyxFJV4MArlnIXSgsRps=
   repository: opennms
   local-dir: rpm
+  dist: 'centos/6'
   skip_cleanup: true
+  on:
+    branch: master
+    jdk: oraclejdk7

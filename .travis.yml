@@ -2,12 +2,16 @@ language: java
 jdk:
 - oraclejdk8
 - oraclejdk7
+
 addons:
   apt_packages:
   - rpm
+
 env:
-- VERSION=1.0 ITERATION=1
+- VERSION=1.0
+
 script: "./gradlew clean shadowJar"
+
 after_success:
 - gem install fpm
 - mkdir -p opt/opennms-sendevent-webhook etc/init.d etc/sysconfig
@@ -18,7 +22,7 @@ after_success:
 - printf "#!/bin/sh\n/sbin/chkconfig --remove opennms-sendevent-webhook\n" > before-remove.sh
 - chmod +x after-install.sh before-remove.sh
 - fpm -s dir -t rpm -a all -n opennms-sendevent-webhook -v ${VERSION} --iteration
-  ${ITERATION} --description "OpenNMS send-event Web Hook" --after-install after-install.sh
+  ${TRAVIS_JOB_ID} --description "OpenNMS send-event Web Hook" --after-install after-install.sh
   --before-remove before-remove.sh --config-files etc/sysconfig/opennms-sendevent-webhook
   --maintainer umberto.nicoletti@gmail.com --url https://github.com/unicolet/opennms-sendevent-webhook
   --rpm-user root --rpm-group root --directories opt/opennms-sendevent-webhook opt etc

@@ -10,10 +10,23 @@ import java.util.regex.Pattern
 
 class OSEWebHookServlet extends GroovyServlet {
     Logger logger = LoggerFactory.getLogger(this.class);
+    private String prefix="/api/v1/";
     
+    public OSEWebHookServlet(String p) {
+        super()
+        if(!p) {
+            prefix="/"
+        } else {
+            prefix=p
+            if(!prefix.endsWith("/")) { //must end with a slash
+                prefix=prefix+"/"
+            }
+        }
+    }
+   
     @Override
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        def uei=request.getPathInfo().replaceFirst("/","");
+        def uei=request.getPathInfo().replaceFirst(prefix,""); //strip the prefix and be done with it
         String token=""
         
         if(uei=="" || uei.indexOf("/")==-1) {

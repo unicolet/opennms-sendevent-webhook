@@ -40,5 +40,5 @@ deploy:
   dist: 'el/6'
   skip_cleanup: true
   on:
-    branch: master
+    branch: release-rpm
     jdk: oraclejdk7

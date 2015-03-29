@@ -11,8 +11,10 @@ becomes:
     curl http://127.0.0.1:9090/uei.opennms.org/internal/discovery/newSuspect?ip=172.16.1.1
 
 
-Installation
-------------
+# Installation
+
+Make sure you have Java 7 or greater in your path. The software will not work with Java 6
+due an upstream dependency having been compiled with Java 7.
 
 Clone the repo, then run:
 
@@ -26,7 +28,7 @@ To run it as a standalone program on a console (all platforms):
 
     java -jar -DPORT=9090 -Dopennms.host=127.0.0.1 build/libs/opennms-sendevent-webhook-0.1-all.jar
 
-The software bundles a SysV init script in init.d. To run it as a service type the following commands as root:
+The software bundles a SysV-style init script in init.d. To run it as a service type the following commands as root:
 
     mkdir -p /opt/opennms-sendevent-webhook
     cp build/libs/opennms-sendevent-webhook-0.1-all.jar /opt/opennms-sendevent-webhook/
@@ -36,8 +38,18 @@ The software bundles a SysV init script in init.d. To run it as a service type t
 
 To run the software as a service under other inits (systemd, upstart) consider using a generator like [pleaserun](https://github.com/jordansissel/pleaserun).
 
-Configuration
--------------
+Pull requests are welcome.
+
+## Installation with RPM (experimental)
+
+A rpm version of this software is available at:
+
+    https://packagecloud.io/unicoletti/opennms
+    
+**IMPORTANT**: the rpm has no explicit dependencies, but you must have Java >= 7
+in PATH to run the service.
+
+# Configuration
 
 Create a /etc/default/opennms-sendevent-webhook (Ubuntu,Debian) or /etc/sysconfig/opennms-sendevent-webhook (RH, Centos)
 and change the following variables (their meaning should be self explanatory):
@@ -48,8 +60,7 @@ and change the following variables (their meaning should be self explanatory):
     group="root"
     chdir="/opt/opennms-sendevent-webhook"
 
-Authorization
--------------
+# Authorization
 
 The web hook implements a token-based authorization scheme to prevent unauthorized access.
 
@@ -63,9 +74,9 @@ The file is read with every request, so there is no need to restart or reload th
 
 Tokens must only contain mixed case letters and numbers.
 
-Suppose *auth_tokens* contains (on a single line, among others) the following token:
+Suppose *auth_tokens* contains (on a single line, among others or alone) the following token:
 
-     fghsAYYE7h287
+    fghsAYYE7h287
      
 Then the previous invocation of the hook changes as follows:
 
@@ -79,13 +90,16 @@ Removing a token:
 
     sed -i -e '/^fghsAYYE7h287$/d' auth_tokens
 
-Credits
--------
+# Credits
 
 This softare uses a Java send-event class that implements the protocol, copied and slightly modified
 from the OpenNMS wiki (http://www.opennms.org/wiki/Send_event_using_java).
 
-License
--------
+# License
 
 Licensed under the GPL v3.
+
+# TODO
+
+- API Versioning
+- ~~Authorization~~ [DONE]

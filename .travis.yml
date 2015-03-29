@@ -35,3 +35,4 @@ deploy:
   dist: centos/6
   repository: opennms
   local-dir: rpm
+  skip_cleanup: true

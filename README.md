@@ -1,5 +1,7 @@
 # opennms-sendevent-webhook
 
+[![Build Status](https://travis-ci.org/unicolet/opennms-sendevent-webhook.svg?branch=master)](https://travis-ci.org/unicolet/opennms-sendevent-webhook)
+
 [send-event.pl](http://www.opennms.org/wiki/Send-event.pl) reinvented as a web hook.
 
     send-event.pl --interface 172.16.1.1 uei.opennms.org/internal/discovery/newSuspect

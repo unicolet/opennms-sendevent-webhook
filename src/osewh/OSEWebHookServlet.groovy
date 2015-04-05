@@ -98,4 +98,8 @@ class OSEWebHookServlet extends GroovyServlet {
         }
         return true
     }
+    
+    public String getPrefix() {
+        return prefix;
+    }
 }

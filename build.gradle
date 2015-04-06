@@ -54,4 +54,5 @@ jar {
 test {
   minHeapSize = "64m"
   maxHeapSize = "256m"
+  jvmArgs '-DCI=true'
 }

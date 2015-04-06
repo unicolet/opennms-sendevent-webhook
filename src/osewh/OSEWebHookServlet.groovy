@@ -31,7 +31,7 @@ class OSEWebHookServlet extends GroovyServlet {
         
         if(uei=="" || uei.indexOf("/")==-1) {
             response.setStatus(400) 
-            response.getOutputStream().print("Please supply uei and params")
+            response.getOutputStream().print("{\"ok\":false, \"message\": \"Please supply UEI and params\"}")
             return
         }
         
@@ -73,16 +73,16 @@ class OSEWebHookServlet extends GroovyServlet {
             }
     
             response.setHeader("Content-type","application/json")
-            response.getOutputStream().print("{ok:${result.ok}, message: '${result.message}'}\n")
+            response.getOutputStream().print("{\"ok\":${result.ok}, \"message\": \"${result.message}\"}")
         } else {
             logger.warn("unauthorized request from ip="+request.getRemoteAddr()+" request="+request.getRequestURL())
             response.setStatus(403) //unauthorized
-            response.getOutputStream().print("Unauthorized")
+            response.getOutputStream().print("{\"ok\":false, \"message\": \"Unauthorized\"}")
         }
     }
     
     private String parseUEI(HttpServletRequest request) {
-        def uei=request.getPathInfo().replaceFirst(prefix,"") //strip the prefix and be done with it
+        def uei=request.getPathInfo()?.replaceFirst(prefix,"") ?: "" //strip the prefix and be done with it
         if(uei.startsWith("/")) {
             // replace first slash
             uei=uei.replaceFirst("/","")

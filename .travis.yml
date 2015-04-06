@@ -10,7 +10,7 @@ addons:
 env:
 - VERSION=1.0
 
-script: "./gradlew clean shadowJar"
+script: "./gradlew clean build shadowJar"
 
 after_success:
 - gem install fpm

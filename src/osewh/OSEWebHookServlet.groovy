@@ -9,17 +9,30 @@ import org.slf4j.LoggerFactory
 import java.util.regex.Pattern
 
 class OSEWebHookServlet extends GroovyServlet {
-    Logger logger = LoggerFactory.getLogger(this.class);
+    Logger logger = LoggerFactory.getLogger(this.class)
+    private String prefix="/api/v1/"
     
+    public OSEWebHookServlet(String p) {
+        super()
+        if(!p) {
+            prefix="/"
+        } else {
+            prefix=p
+            if(!prefix.endsWith("/")) { //must end with a slash
+                prefix=prefix+"/"
+            }
+        }
+    }
+   
     @Override
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        def uei=request.getPathInfo().replaceFirst("/","");
+        def uei=parseUEI(request)
         String token=""
         
         if(uei=="" || uei.indexOf("/")==-1) {
             response.setStatus(400) 
-            response.getOutputStream().print("Please supply a uei and params");
-            return;
+            response.getOutputStream().print("{\"ok\":false, \"message\": \"Please supply UEI and params\"}")
+            return
         }
         
         if(!uei.startsWith("uei")) {
@@ -29,11 +42,11 @@ class OSEWebHookServlet extends GroovyServlet {
         }
         
         if(isAuthorized(token)) {
-            String id=request.getParameter("id");
-            String host=request.getParameter("host");
-            String ipInterface=request.getParameter("ip")?: request.getRemoteAddr();
-            String source=request.getParameter("source")?:"OSEWebHookServlet";
-                def event=new OnmsEvent(uei, ( id? id as int:0), ipInterface, source)
+            String id=request.getParameter("id")
+            String host=request.getParameter("host")
+            String ipInterface=request.getParameter("ip")?: request.getRemoteAddr()
+            String source=request.getParameter("source")?:"OSEWebHookServlet"
+            def event=new OnmsEvent(uei, ( id? id as int:0), ipInterface, source)
             event.setHost(host)
             request.getParameterNames().each { p ->
                 def name=p.toString()
@@ -44,14 +57,14 @@ class OSEWebHookServlet extends GroovyServlet {
             }
             event.addParm("sender-ip",request.getRemoteAddr())
     
-            def opennmsHost=( System.getProperty("opennms.host")?:"127.0.0.1" );
+            def opennmsHost=( System.getProperty("opennms.host")?:"127.0.0.1" )
     
             logger.info("Sending event with uei=${uei} to ${opennmsHost}")
     
-            event.setOpennmsHost( opennmsHost ) ;
+            event.setOpennmsHost( opennmsHost ) 
             def xml=event.toXml()
             logger.trace(xml)
-            def result=event.sendEvent(xml);
+            def result=event.sendEvent(xml)
             
             if(result.ok) {
                 logger.info("event posted successfully")
@@ -60,20 +73,33 @@ class OSEWebHookServlet extends GroovyServlet {
             }
     
             response.setHeader("Content-type","application/json")
-            response.getOutputStream().print("{ok:${result.ok}, message: '${result.message}'}\n");
+            response.getOutputStream().print("{\"ok\":${result.ok}, \"message\": \"${result.message}\"}")
         } else {
-            logger.warn("unauthorized request from ip="+request.getRemoteAddr()+" request="+request.getRequestURL());
+            logger.warn("unauthorized request from ip="+request.getRemoteAddr()+" request="+request.getRequestURL())
             response.setStatus(403) //unauthorized
-            response.getOutputStream().print("Unauthorized");
+            response.getOutputStream().print("{\"ok\":false, \"message\": \"Unauthorized\"}")
         }
+    }
+    
+    private String parseUEI(HttpServletRequest request) {
+        def uei=request.getPathInfo()?.replaceFirst(prefix,"") ?: "" //strip the prefix and be done with it
+        if(uei.startsWith("/")) {
+            // replace first slash
+            uei=uei.replaceFirst("/","")
+        }
+        return uei
     }
     
     private boolean isAuthorized(String token) {
         def authorizedTokens=new File("auth_tokens")
         if(authorizedTokens.exists()) {
-            token=token.replaceAll("([\\.\\*\\]\\[\\(\\)])") { "" }; // escape regex
+            token=token.replaceAll("([\\.\\*\\]\\[\\(\\)])") { "" } // escape regex
             return token && Pattern.compile("(?m)^${token}\$").matcher(authorizedTokens.text).find()
         }
         return true
+    }
+    
+    public String getPrefix() {
+        return prefix;
     }
 }

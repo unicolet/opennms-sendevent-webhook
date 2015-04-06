@@ -1,0 +1,81 @@
+package osewh
+
+import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.mock.web.MockHttpServletResponse
+import groovy.json.JsonSlurper
+
+class OSEServletSpec extends spock.lang.Specification {
+  def json = new JsonSlurper()
+  
+  def cleanup() {
+    def tokens=new File("auth_tokens")
+    if (tokens.exists()) {
+      tokens.delete()
+    }
+  }
+  
+  def "prefix should always end with a /"(servlet) {
+    expect:
+    servlet.prefix.charAt(servlet.prefix.length()-1) == "/"
+
+    where:
+    servlet                            | _ 
+    new OSEWebHookServlet(null)        | _
+    new OSEWebHookServlet("")          | _
+    new OSEWebHookServlet("/api/v2/")  | _
+    new OSEWebHookServlet("/api/v2")   | _
+  }
+  
+  def "check MockHttpServletRequest behavior"(uri,method) {
+    expect:
+    def req = new MockHttpServletRequest(method,uri)
+    req.setPathInfo(uri)
+    req.getPathInfo() == uri
+    
+    where:
+    uri                                  | method
+    "/"                                  | "GET"
+    "/uei?ip=1.2.3.4"                    | "GET"
+    "/uei.test/abc?ip=1.2.3.4"           | "GET"
+  }
+  
+  def "pathInfo must begin with 'uei' and contain at least a /"(uri, method, status, ok) {
+    given:
+    def response=new MockHttpServletResponse()
+    
+    expect:
+    def req=new MockHttpServletRequest(method,uri)
+    req.setPathInfo(uri)
+    def servlet=new OSEWebHookServlet(null).service(req, response)
+    response.status == status
+    json.parseText(response.getContentAsString()).ok == ok // ok is always false because there is no one to receive our event
+    
+    where:
+    uri                                  | method | status | ok
+    "/"                                  | "GET"  | 400    | false
+    "/uei?ip=1.2.3.4"                    | "GET"  | 400    | false
+    "/uei.test/abc?ip=1.2.3.4"           | "GET"  | 200    | false
+    "/abcbefg/uei.test/abc?ip=1.2.3.4"   | "GET"  | 200    | false
+  }
+  
+  def "when auth_tokens exists a valid token is required"(uri, method, status, ok) {
+    given:
+    def response=new MockHttpServletResponse()
+    new File("auth_tokens") << "1234567"
+    
+    expect:
+    def req=new MockHttpServletRequest(method,uri)
+    req.setPathInfo(uri)
+    def servlet=new OSEWebHookServlet(null).service(req, response)
+    response.status == status
+    json.parseText(response.getContentAsString()).ok == ok // ok is always false because there is no one to receive our event
+    
+    where:
+    uri                                  | method | status | ok
+    "/"                                  | "GET"  | 400    | false
+    "/uei?ip=1.2.3.4"                    | "GET"  | 400    | false
+    "/uei.test/abc?ip=1.2.3.4"           | "GET"  | 403    | false
+    "/abcbefg/uei.test/abc?ip=1.2.3.4"   | "GET"  | 403    | false
+    "/1234567/uei.test/abc?ip=1.2.3.4"   | "GET"  | 200    | false
+  }
+}

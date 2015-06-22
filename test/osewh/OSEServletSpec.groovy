@@ -78,4 +78,27 @@ class OSEServletSpec extends spock.lang.Specification {
     "/abcbefg/uei.test/abc?ip=1.2.3.4"   | "GET"  | 403    | false
     "/1234567/uei.test/abc?ip=1.2.3.4"   | "GET"  | 200    | false
   }
+  
+  def "when a string contains xml it should be detected"(text, xml) {
+    expect:
+    def servlet=new OSEWebHookServlet(null)
+    
+    where:
+    text                                 | xml
+    "some text"                          | false
+    "<tag></tag>"                        | true
+    "<?xml version='1.0'><tag></tag>"    | true
+    "some text <tag></tag>"              | false
+  }
+  
+  def "when a string contains json it should be detected"(text, json) {
+    expect:
+    def servlet=new OSEWebHookServlet(null)
+    
+    where:
+    text                                             | json
+    "some text"                                      | false
+    "some text {json: 1, string:'str'}"              | false
+    "{a:1, t:'abc'}"                                 | false
+  }
 }

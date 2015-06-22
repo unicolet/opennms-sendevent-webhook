@@ -23,11 +23,27 @@ class OSEWebHookServlet extends GroovyServlet {
             }
         }
     }
+    
+    boolean isJsonOrXml(String txt) {
+        boolean result=false
+        
+        if(txt) {
+           result=txt.startsWith("<")
+           
+           if(!result) {
+               result=txt.startsWith("{")
+           }
+            
+        }
+        
+        return result
+    }
    
     @Override
     void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
         def uei=parseUEI(request)
         String token=""
+        boolean isPost="POST".equalsIgnoreCase(request.getMethod())
         
         if(uei=="" || uei.indexOf("/")==-1) {
             response.setStatus(400) 
@@ -51,8 +67,13 @@ class OSEWebHookServlet extends GroovyServlet {
             request.getParameterNames().each { p ->
                 def name=p.toString()
                 if (name!="id" && name!="host" && name!="source" && name!="ip") {
-                    logger.debug("adding event param: "+name)
-                    event.addParm(name, request.getParameter(name))
+                    if(isPost && isJsonOrXml(name)) {
+                        logger.debug("adding event param BODY: "+name)
+                        event.addParm('BODY', name)
+                    } else {
+                        logger.debug("adding event param: "+name)
+                        event.addParm(name, request.getParameter(name))
+                    }
                 }
             }
             event.addParm("sender-ip",request.getRemoteAddr())
@@ -65,6 +86,9 @@ class OSEWebHookServlet extends GroovyServlet {
             def xml=event.toXml()
             logger.trace(xml)
             def result=event.sendEvent(xml)
+            if(logger.isDebugEnabled()) {
+                logger.debug(xml)
+            }
             
             if(result.ok) {
                 logger.info("event posted successfully")

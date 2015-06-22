@@ -40,13 +40,13 @@ To run the software as a service under other inits (systemd, upstart) consider u
 
 Pull requests are welcome.
 
-## Installation with RPM (experimental)
+## Installation with RPM
 
 A rpm version of this software is available at:
 
     https://packagecloud.io/unicoletti/opennms
     
-**IMPORTANT**: the rpm has no explicit dependencies, but you must have Java >= 7
+**IMPORTANT**: the rpm has no explicit dependencies, but you must have java >= 7
 in PATH to run the service.
 
 # Configuration
@@ -74,7 +74,7 @@ The file is read with every request, so there is no need to restart or reload th
 
 Tokens must only contain mixed case letters and numbers.
 
-Suppose *auth_tokens* contains (on a single line, among others or alone) the following token:
+Suppose *auth_tokens* contains (on a single line, among others or alon) the following token:
 
     fghsAYYE7h287
      
@@ -101,5 +101,6 @@ Licensed under the GPL v3.
 
 # TODO
 
-- API Versioning
+- ~~API Versioning~~ [DONE]
 - ~~Authorization~~ [DONE]
+- ~~handle post body~~ [DONE]

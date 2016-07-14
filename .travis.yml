@@ -16,7 +16,7 @@ after_success:
 - gem install fpm
 - mkdir -p opt/opennms-sendevent-webhook etc/init.d etc/sysconfig
 - cp init.d/opennms-sendevent-webhook etc/init.d
-- cp build/libs/opennms-sendevent-webhook-${VERSION}-all.jar opt/opennms-sendevent-webhook/
+- cp build/libs/opennms-sendevent-webhook-*-all.jar opt/opennms-sendevent-webhook/
 - touch etc/sysconfig/opennms-sendevent-webhook
 - printf "#!/bin/sh\n/sbin/chkconfig --add opennms-sendevent-webhook\n" > after-install.sh
 - printf "#!/bin/sh\n/sbin/chkconfig --del opennms-sendevent-webhook\n" > before-remove.sh

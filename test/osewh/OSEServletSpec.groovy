@@ -82,6 +82,7 @@ class OSEServletSpec extends spock.lang.Specification {
   def "when a string contains xml it should be detected"(text, xml) {
     expect:
     def servlet=new OSEWebHookServlet(null)
+    servlet.isJsonOrXml(text) == xml
     
     where:
     text                                 | xml
@@ -94,11 +95,12 @@ class OSEServletSpec extends spock.lang.Specification {
   def "when a string contains json it should be detected"(text, json) {
     expect:
     def servlet=new OSEWebHookServlet(null)
+    servlet.isJsonOrXml(text) == json
     
     where:
     text                                             | json
     "some text"                                      | false
     "some text {json: 1, string:'str'}"              | false
-    "{a:1, t:'abc'}"                                 | false
+    "{a:1, t:'abc'}"                                 | true
   }
 }

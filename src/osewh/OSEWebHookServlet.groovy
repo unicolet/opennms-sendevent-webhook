@@ -62,6 +62,7 @@ class OSEWebHookServlet extends GroovyServlet {
             String host=request.getParameter("host")
             String ipInterface=request.getParameter("ip")?: request.getRemoteAddr()
             String source=request.getParameter("source")?:"OSEWebHookServlet"
+            String gif=request.getParameter("gif")
             def event=new OnmsEvent(uei, ( id? id as int:0), ipInterface, source)
             event.setHost(host)
             request.getParameterNames().each { p ->
@@ -95,9 +96,14 @@ class OSEWebHookServlet extends GroovyServlet {
             } else {
                 logger.error("event post failed:"+result.message)
             }
-    
-            response.setHeader("Content-type","application/json")
-            response.getOutputStream().print("{\"ok\":${result.ok}, \"message\": \"${result.message}\"}")
+   
+            if("1".equals(gif)) {
+                response.setHeader("Content-type","image/gif")
+                response.getOutputStream().print("")
+            } else {
+                response.setHeader("Content-type","application/json")
+                response.getOutputStream().print("{\"ok\":${result.ok}, \"message\": \"${result.message}\"}")
+            }
         } else {
             logger.warn("unauthorized request from ip="+request.getRemoteAddr()+" request="+request.getRequestURL())
             response.setStatus(403) //unauthorized

@@ -103,4 +103,24 @@ class OSEServletSpec extends spock.lang.Specification {
     "some text {json: 1, string:'str'}"              | false
     "{a:1, t:'abc'}"                                 | true
   }
+  
+  def "if the gif param is present and set to 1 return a 1x1 transparent gif"(uri, gif, method, status, ctype) {
+    given:
+    def response=new MockHttpServletResponse()
+    new File("auth_tokens") << "1234567"
+    
+    expect:
+    def req=new MockHttpServletRequest(method,uri)
+    req.setPathInfo(uri)
+    req.addParameter("gif", gif)
+    def servlet=new OSEWebHookServlet(null).service(req, response)
+    response.status == status
+    response.contentType == ctype
+    
+    where:
+    uri                                        | gif | method | status | ctype 
+    "/1234567/uei.test/abc?ip=1.2.3.4"         | "0" | "GET"  | 200    | "application/json"
+    "/1234567/uei.test/abc?ip=1.2.3.4&gif=1"   | "1" | "GET"  | 200    | "image/gif"
+    "/1234567/uei.test/abc?ip=1.2.3.4&gif=0"   | "0" | "GET"  | 200    | "application/json"
+  }
 }

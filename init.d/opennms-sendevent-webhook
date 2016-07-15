@@ -35,7 +35,7 @@ name=opennms-sendevent-webhook
 [ -r /etc/sysconfig/$name ] && . /etc/sysconfig/$name
 
 program=java
-args="-jar -DPORT=${PORT} -Dopennms.host=${OPENNMS_HOST} /opt/opennms-sendevent-webhook/opennms-sendevent-webhook-0.1-all.jar"
+args="-jar -DPORT=${PORT} -Dopennms.host=${OPENNMS_HOST} /opt/opennms-sendevent-webhook/opennms-sendevent-webhook-1.1-all.jar"
 pidfile="/var/run/$name.pid"
 
 trace() {

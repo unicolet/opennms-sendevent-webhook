@@ -116,6 +116,7 @@ class OSEServletSpec extends spock.lang.Specification {
     def servlet=new OSEWebHookServlet(null).service(req, response)
     response.status == status
     response.contentType == ctype
+    response.getContentAsByteArray().length > 0
     
     where:
     uri                                        | gif | method | status | ctype 

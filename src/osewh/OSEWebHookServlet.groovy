@@ -99,7 +99,7 @@ class OSEWebHookServlet extends GroovyServlet {
    
             if("1".equals(gif)) {
                 response.setHeader("Content-type","image/gif")
-                response.getOutputStream().print("")
+                response.getOutputStream().write(Gif.getImageBytes())
             } else {
                 response.setHeader("Content-type","application/json")
                 response.getOutputStream().print("{\"ok\":${result.ok}, \"message\": \"${result.message}\"}")

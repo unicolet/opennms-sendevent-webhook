@@ -81,7 +81,7 @@ class OSEWebHookServlet extends GroovyServlet {
         if(isAuthorized(token)) {
             String id=request.getParameter("id")
             String host=request.getParameter("host")
-            String ipInterface=request.getParameter("ip")?: request.getRemoteAddr()
+            String ipInterface=request.getParameter("ip") ?: getIpAddr(request)
             String source=request.getParameter("source")?:"OSEWebHookServlet"
             String gif=request.getParameter("gif")
             def event=new OnmsEvent(uei, ( id? id as int:0), ipInterface, source)

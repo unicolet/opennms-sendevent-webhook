@@ -10,6 +10,14 @@ becomes:
 
     curl http://127.0.0.1:9090/uei.opennms.org/internal/discovery/newSuspect?ip=172.16.1.1
 
+Adding the *gif=1* param will change the output to a 1x1 transparent gif instead of json. Great for
+stealth tracking in web pages.
+
+Reverse proxy friendly: if the ip param is not specified it will be extracted from (in order):
+
+1. X-Real-IP header
+2. X-Forwarded-For header
+3. request.getRemoteAddr
 
 # Installation
 

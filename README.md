@@ -103,6 +103,10 @@ Removing a token:
 This softare uses a Java send-event class that implements the protocol, copied and slightly modified
 from the OpenNMS wiki (http://www.opennms.org/wiki/Send_event_using_java).
 
+# Development notes
+
+How to bump version: edit ``build.gradle``, change version, then run ``./gradlew bumpVersion``. Commit && push
+
 # License
 
 Licensed under the GPL v3.

@@ -56,3 +56,8 @@ test {
   maxHeapSize = "64m"
   jvmArgs '-DCI=true'
 }
+
+task bumpVersion() {
+    println "Bumping version to: $version"
+    ant.replaceregexp(file: ".travis.yml", match: "^- VERSION=.*\$", replace: "- VERSION=${version}", byline: true)
+}

@@ -124,4 +124,25 @@ class OSEServletSpec extends spock.lang.Specification {
     "/1234567/uei.test/abc?ip=1.2.3.4&gif=1"   | "1" | "GET"  | 200    | "image/gif"
     "/1234567/uei.test/abc?ip=1.2.3.4&gif=0"   | "0" | "GET"  | 200    | "application/json"
   }
+  
+  def "if request has X-Forwarded-For header use that instead of remoteAddr"(xff, xrealip, remote, expected) {
+    expect:
+    def req=new MockHttpServletRequest("GET","/")
+    req.setRemoteAddr(remote)
+    if(xff.length()>1) {
+      req.addHeader("X-Forwarded-For",xff)
+    }
+    if(xrealip.length()>1) {
+      req.addHeader("X-Real-IP",xrealip)
+    }
+    def servlet=new OSEWebHookServlet(null)
+    expected == servlet.getIpAddr(req)
+    
+    where:
+    xff                            | xrealip     | remote         | expected
+    ""                             | ""          | "192.168.2.5"  | "192.168.2.5"
+    "192.68.0.1"                   | ""          | "192.168.2.5"  | "192.68.0.1"
+    ""                             | "10.1.1.1"  | "192.168.2.5"  | "10.1.1.1"
+    "129.78.138.66, 129.78.64.103" | ""          | "192.168.2.5"  | "129.78.138.66"
+  }
 }
